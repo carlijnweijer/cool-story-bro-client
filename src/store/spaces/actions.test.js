@@ -1,26 +1,28 @@
-import axios from "axios";
-import { fetchSpaces, fetchSpacesSuccess } from "./actions";
+import { FETCH_SPACES_SUCCESS, fetchSpacesSuccess } from "./actions";
 
-jest.mock("axios");
+describe("#fetchSpacesSuccess", () => {
+  describe("if given an array of spaces", () => {
+    const spaces = [{}, {}];
+    const expected = {
+      type: FETCH_SPACES_SUCCESS,
+      payload: spaces,
+    };
 
-describe("space actions", () => {
-  describe("#fetchSpaces", () => {
-    describe("when this function is called", () => {
-      test("it should fetch the data and dispatch a fetchSpacesSuccess action", async () => {
-        const dispatch = jest.fn();
-        const getState = jest.fn().mockReturnValueOnce({ spaces: [] });
-        const response = {
-          data: { spaces: { rows: [{ name: "matias" }] } },
-        };
+    test("should return an action object", () => {
+      // test data simulating homepages
+      // build action we expect to get back
 
-        axios.get.mockImplementationOnce(() => Promise.resolve(response));
+      // call function
+      const action = fetchSpacesSuccess(spaces);
+      // do assertion on function return
+      expect(action).toEqual(expected);
+    });
 
-        const thunk = fetchSpaces();
-        await thunk(dispatch, getState);
-        expect(dispatch).toHaveBeenCalledWith(
-          fetchSpacesSuccess(response.data.spaces.rows)
-        );
-      });
+    // 1. test =>
+    //toHaveLength
+    test("action.payload should have the same length as the argument given", () => {
+      const action = fetchSpacesSuccess(spaces);
+      expect(action.payload).toHaveLength(spaces.length);
     });
   });
 });
